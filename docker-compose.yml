@@ -1,0 +1,11 @@
+version : '2'
+services:
+    server1:
+      image: node-server:master
+      ports:
+        - 8080
+
+    server2:
+      image: node-server:master
+      ports:
+        - 8080

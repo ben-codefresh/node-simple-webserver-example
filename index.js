@@ -109,6 +109,7 @@ var uname   // a global to store `uname -a` output
         , vars = {
               uname   : uname
             , cpuinfo : cpuinfo
+            , container: process.env.HOSTNAME
           }
           // Here we set up a simple async-helper. The `after` module creates
           // a new function for us that will execute the function we give it
@@ -213,13 +214,13 @@ exec('uname -a', function (err, stdout) {
   // what?
   uname = stdout.toString()
 })
-
-exec('cat /proc/cpuinfo', function (err, stdout) {
-  if (err) throw err
-  // Same problem noted above, execution happens in here at some point in the
-  // future, certainly *after* we've called `listen()` on our new http server.
-  cpuinfo = stdout.toString()
-})
+//
+// exec('cat /proc/cpuinfo', function (err, stdout) {
+//   if (err) throw err
+//   // Same problem noted above, execution happens in here at some point in the
+//   // future, certainly *after* we've called `listen()` on our new http server.
+//   cpuinfo = stdout.toString()
+// })
 
 // `createServer()` simply takes a handler function that is passed request
 // and response objects. This handler-function is called for every request
@@ -237,8 +238,16 @@ http.createServer(function (req, res) {
   // pages you wanted to serve then you could set them up here. Once you have
   // too many pages then you may want to consider bringing in a router module
   // to handle complex paths for you.
-  if (req.url == '/')
+  if (req.url == '/'){
+      console.log('requesting main server');
     return index(req, res) // return here is only used for short-cutting
+  }
+
+  if(req.url == '/check'){
+      console.log('requesting handcheck');
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      return res.end('Id is: '+ process.env.HOSTNAME + ' !')
+  }
 
   // `mount` is our mount-point created by the `st` module, it can handle
   // all other HTTP requests. If the requests are for files that are found
