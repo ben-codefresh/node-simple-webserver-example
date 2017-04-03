@@ -8,7 +8,7 @@ steps:
     dockerfile: Dockerfile
     tag: moshe
     
-  BuildingDockerImage:
+  BuildingDockerImage2:
     title: Building Docker Image
     type: build
     image_name: bencodefresh/nodesimplewebserverexample
